@@ -1,0 +1,91 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-primary: #cc0000;
+  --color-primary-dark: #990000;
+  --color-primary-light: #ff3333;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-white text-[#111111] antialiased dark:bg-[#0A0A0A] dark:text-[#F0F0F0];
+  }
+  ::selection {
+    @apply bg-brand text-white;
+  }
+}
+
+@layer components {
+  .container-klass {
+    @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+  }
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded bg-brand px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-brand-dark disabled:cursor-not-allowed disabled:opacity-50 dark:hover:bg-brand-light;
+  }
+  .btn-outline {
+    @apply inline-flex items-center justify-center gap-2 rounded border border-[#E0E0E0] bg-transparent px-5 py-2.5 text-sm font-semibold transition-colors hover:border-brand hover:text-brand dark:border-[#2A2A2A] dark:hover:border-brand-light dark:hover:text-brand-light;
+  }
+  .input-klass {
+    @apply w-full rounded border border-[#E0E0E0] bg-white px-3.5 py-2.5 text-sm outline-none transition-colors placeholder:text-[#999999] focus:border-brand dark:border-[#2A2A2A] dark:bg-[#1A1A1A] dark:focus:border-brand-light;
+  }
+  .card-klass {
+    @apply rounded-lg border border-[#E0E0E0] bg-white dark:border-[#2A2A2A] dark:bg-[#1A1A1A];
+  }
+  .section-title {
+    @apply text-2xl font-bold tracking-tight text-black dark:text-white sm:text-3xl;
+  }
+}
+
+/* Thin styled scrollbar for horizontal product rows */
+.scroll-row::-webkit-scrollbar {
+  height: 6px;
+}
+.scroll-row::-webkit-scrollbar-thumb {
+  @apply rounded bg-[#E0E0E0] dark:bg-[#2A2A2A];
+}
+.scroll-row::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Rich text (blog posts, product descriptions) */
+.prose-klass h2 {
+  @apply mb-3 mt-8 text-xl font-bold text-black dark:text-white;
+}
+.prose-klass h3 {
+  @apply mb-2 mt-6 text-lg font-semibold text-black dark:text-white;
+}
+.prose-klass p {
+  @apply mb-4 leading-relaxed text-[#555555] dark:text-[#999999];
+}
+.prose-klass a {
+  @apply text-brand underline dark:text-brand-light;
+}
+.prose-klass ul {
+  @apply mb-4 list-disc pl-6 text-[#555555] dark:text-[#999999];
+}
+.prose-klass strong {
+  @apply text-black dark:text-white;
+}
+
+/* Tiptap editor */
+.tiptap-editor .ProseMirror {
+  @apply min-h-[200px] p-4 outline-none;
+}
+.tiptap-editor .ProseMirror p {
+  @apply mb-2;
+}
+
+/* Swiper pagination bullets in brand red */
+.swiper-pagination-bullet {
+  background: #ffffff !important;
+  opacity: 0.5;
+}
+.swiper-pagination-bullet-active {
+  background: #cc0000 !important;
+  opacity: 1;
+}
