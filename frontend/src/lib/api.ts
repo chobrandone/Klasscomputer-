@@ -73,7 +73,13 @@ export async function serverApi<T = any>(
   revalidate = 60,
 ): Promise<T | null> {
   try {
-    const res = await fetch(`${SERVER_API_URL}${path}`, { next: { revalidate } });
+    // Timeout keeps builds/ISR from hanging when the API is unreachable
+    // (e.g. a sleeping Render free instance) — pages render without data
+    // and refill on the next revalidation once the API is back.
+    const res = await fetch(`${SERVER_API_URL}${path}`, {
+      next: { revalidate },
+      signal: AbortSignal.timeout(8000),
+    });
     if (!res.ok) return null;
     return res.json();
   } catch {
