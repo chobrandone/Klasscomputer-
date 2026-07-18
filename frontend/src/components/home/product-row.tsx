@@ -1,16 +1,18 @@
 import Link from 'next/link';
+import type { TranslationKey } from '@/lib/i18n';
 import type { Product } from '@/lib/types';
+import { T } from '@/components/layout/i18n-ui';
 import { ProductCard } from '@/components/product/product-card';
 
 /** Horizontal scrollable product row with a section header. */
 export function ProductRow({
-  title,
-  subtitle,
+  titleKey,
+  subtitleKey,
   products,
   href,
 }: {
-  title: string;
-  subtitle?: string;
+  titleKey: TranslationKey;
+  subtitleKey?: TranslationKey;
   products: Product[];
   href?: string;
 }) {
@@ -20,9 +22,13 @@ export function ProductRow({
     <section className="container-klass mt-14">
       <div className="mb-6 flex items-end justify-between">
         <div>
-          <h2 className="section-title">{title}</h2>
-          {subtitle && (
-            <p className="mt-1 text-sm text-[#555555] dark:text-[#999999]">{subtitle}</p>
+          <h2 className="section-title">
+            <T k={titleKey} />
+          </h2>
+          {subtitleKey && (
+            <p className="mt-1 text-sm text-[#555555] dark:text-[#999999]">
+              <T k={subtitleKey} />
+            </p>
           )}
         </div>
         {href && (
@@ -30,7 +36,7 @@ export function ProductRow({
             href={href}
             className="text-sm font-semibold text-brand hover:underline dark:text-brand-light"
           >
-            View all →
+            <T k="common.viewAll" /> →
           </Link>
         )}
       </div>
@@ -47,14 +53,14 @@ export function ProductRow({
 
 /** Static product grid with a section header. */
 export function ProductGridSection({
-  title,
-  subtitle,
+  titleKey,
+  subtitleKey,
   products,
   href,
   columns = 4,
 }: {
-  title: string;
-  subtitle?: string;
+  titleKey: TranslationKey;
+  subtitleKey?: TranslationKey;
   products: Product[];
   href?: string;
   columns?: 4 | 5;
@@ -65,9 +71,13 @@ export function ProductGridSection({
     <section className="container-klass mt-14">
       <div className="mb-6 flex items-end justify-between">
         <div>
-          <h2 className="section-title">{title}</h2>
-          {subtitle && (
-            <p className="mt-1 text-sm text-[#555555] dark:text-[#999999]">{subtitle}</p>
+          <h2 className="section-title">
+            <T k={titleKey} />
+          </h2>
+          {subtitleKey && (
+            <p className="mt-1 text-sm text-[#555555] dark:text-[#999999]">
+              <T k={subtitleKey} />
+            </p>
           )}
         </div>
         {href && (
@@ -75,7 +85,7 @@ export function ProductGridSection({
             href={href}
             className="text-sm font-semibold text-brand hover:underline dark:text-brand-light"
           >
-            View all →
+            <T k="common.viewAll" /> →
           </Link>
         )}
       </div>

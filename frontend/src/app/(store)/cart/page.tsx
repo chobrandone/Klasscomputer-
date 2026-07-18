@@ -8,12 +8,14 @@ import toast from 'react-hot-toast';
 import { api } from '@/lib/api';
 import { formatXAF } from '@/lib/utils';
 import { useCartStore } from '@/stores/cart-store';
+import { useT } from '@/components/layout/i18n-ui';
 
 const FREE_SHIPPING_THRESHOLD = 50000;
 const FLAT_SHIPPING = 2500;
 
 export default function CartPage() {
   const { items, updateQuantity, remove, clear } = useCartStore();
+  const { t } = useT();
   const [couponCode, setCouponCode] = useState('');
   const [coupon, setCoupon] = useState<{ code: string; discount: number } | null>(null);
   const [validating, setValidating] = useState(false);
@@ -49,12 +51,10 @@ export default function CartPage() {
     return (
       <div className="container-klass flex flex-col items-center gap-4 py-24 text-center">
         <ShoppingCart className="h-16 w-16 text-[#E0E0E0] dark:text-[#2A2A2A]" />
-        <h1 className="text-2xl font-extrabold">Your cart is empty</h1>
-        <p className="text-sm text-[#555555] dark:text-[#999999]">
-          Looks like you haven&apos;t added anything yet.
-        </p>
+        <h1 className="text-2xl font-extrabold">{t('cart.empty')}</h1>
+        <p className="text-sm text-[#555555] dark:text-[#999999]">{t('cart.emptyHint')}</p>
         <Link href="/shop" className="btn-primary mt-2">
-          Start Shopping
+          {t('cart.startShopping')}
         </Link>
       </div>
     );
@@ -62,7 +62,7 @@ export default function CartPage() {
 
   return (
     <div className="container-klass py-10">
-      <h1 className="mb-8 text-2xl font-extrabold sm:text-3xl">Shopping Cart</h1>
+      <h1 className="mb-8 text-2xl font-extrabold sm:text-3xl">{t('cart.title')}</h1>
       <div className="grid gap-8 lg:grid-cols-[1fr_360px]">
         {/* Items */}
         <div className="card-klass divide-y divide-[#F5F5F5] dark:divide-[#2A2A2A]">
@@ -129,17 +129,17 @@ export default function CartPage() {
           ))}
           <div className="flex justify-between p-4">
             <button onClick={clear} className="text-sm text-[#999999] hover:text-brand">
-              Clear cart
+              {t('cart.clearCart')}
             </button>
             <Link href="/shop" className="text-sm font-semibold text-brand dark:text-brand-light">
-              Continue shopping →
+              {t('cart.continueShopping')} →
             </Link>
           </div>
         </div>
 
         {/* Summary */}
         <div className="card-klass h-fit p-6">
-          <h2 className="text-lg font-bold">Order Summary</h2>
+          <h2 className="text-lg font-bold">{t('cart.orderSummary')}</h2>
 
           <form onSubmit={applyCoupon} className="mt-4 flex gap-2">
             <div className="relative flex-1">
@@ -147,44 +147,50 @@ export default function CartPage() {
               <input
                 value={couponCode}
                 onChange={(e) => setCouponCode(e.target.value)}
-                placeholder="Coupon code"
+                placeholder={t('cart.couponPlaceholder')}
                 className="input-klass !pl-9"
               />
             </div>
             <button type="submit" disabled={validating} className="btn-outline shrink-0 !px-4">
-              Apply
+              {t('common.apply')}
             </button>
           </form>
 
           <div className="mt-5 space-y-2.5 text-sm">
             <div className="flex justify-between">
-              <span className="text-[#555555] dark:text-[#999999]">Subtotal</span>
+              <span className="text-[#555555] dark:text-[#999999]">{t('common.subtotal')}</span>
               <span className="font-semibold">{formatXAF(subtotal)}</span>
             </div>
             {coupon && (
               <div className="flex justify-between text-green-600 dark:text-green-400">
-                <span>Discount ({coupon.code})</span>
+                <span>
+                  {t('common.discount')} ({coupon.code})
+                </span>
                 <span>-{formatXAF(discount)}</span>
               </div>
             )}
             <div className="flex justify-between">
-              <span className="text-[#555555] dark:text-[#999999]">Estimated shipping</span>
+              <span className="text-[#555555] dark:text-[#999999]">
+                {t('common.estimatedShipping')}
+              </span>
               <span className="font-semibold">
-                {shipping === 0 ? <span className="text-green-600 dark:text-green-400">Free</span> : formatXAF(shipping)}
+                {shipping === 0 ? (
+                  <span className="text-green-600 dark:text-green-400">{t('common.free')}</span>
+                ) : (
+                  formatXAF(shipping)
+                )}
               </span>
             </div>
             <div className="flex justify-between border-t border-[#E0E0E0] pt-3 text-base font-extrabold dark:border-[#2A2A2A]">
-              <span>Total</span>
+              <span>{t('common.total')}</span>
               <span className="text-brand dark:text-brand-light">{formatXAF(total)}</span>
             </div>
           </div>
 
           <Link href="/checkout" className="btn-primary mt-6 w-full !py-3">
-            Proceed to Checkout →
+            {t('cart.proceedToCheckout')} →
           </Link>
-          <p className="mt-3 text-center text-xs text-[#999999]">
-            🔒 Secure checkout · Visa · Mastercard · MoMo
-          </p>
+          <p className="mt-3 text-center text-xs text-[#999999]">{t('cart.secureCheckout')}</p>
         </div>
       </div>
     </div>

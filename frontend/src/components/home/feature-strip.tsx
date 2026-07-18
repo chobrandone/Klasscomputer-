@@ -1,13 +1,18 @@
-import { Headphones, RotateCcw, ShieldCheck, Truck } from 'lucide-react';
+'use client';
 
-const features = [
-  { icon: Truck, title: 'Free Shipping', text: 'On orders above 50,000 XAF' },
-  { icon: RotateCcw, title: '30-Day Returns', text: 'Hassle-free money back' },
-  { icon: ShieldCheck, title: 'Secure Payment', text: 'Card & Mobile Money' },
-  { icon: Headphones, title: '24/7 Support', text: 'Talk to a real tech expert' },
+import { Headphones, RotateCcw, ShieldCheck, Truck } from 'lucide-react';
+import type { TranslationKey } from '@/lib/i18n';
+import { useT } from '@/components/layout/i18n-ui';
+
+const features: { icon: any; title: TranslationKey; text: TranslationKey }[] = [
+  { icon: Truck, title: 'features.freeShipping', text: 'features.freeShippingSub' },
+  { icon: RotateCcw, title: 'features.returns', text: 'features.returnsSub' },
+  { icon: ShieldCheck, title: 'features.securePayment', text: 'features.securePaymentSub' },
+  { icon: Headphones, title: 'features.support', text: 'features.supportSub' },
 ];
 
 export function FeatureStrip() {
+  const { t } = useT();
   return (
     <section className="container-klass mt-12">
       <div className="grid grid-cols-2 gap-4 rounded-lg border border-[#E0E0E0] bg-[#F5F5F5] p-6 dark:border-[#2A2A2A] dark:bg-[#141414] lg:grid-cols-4">
@@ -17,8 +22,8 @@ export function FeatureStrip() {
               <feature.icon className="h-5 w-5" />
             </div>
             <div>
-              <p className="text-sm font-bold">{feature.title}</p>
-              <p className="text-xs text-[#555555] dark:text-[#999999]">{feature.text}</p>
+              <p className="text-sm font-bold">{t(feature.title)}</p>
+              <p className="text-xs text-[#555555] dark:text-[#999999]">{t(feature.text)}</p>
             </div>
           </div>
         ))}

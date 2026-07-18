@@ -3,16 +3,18 @@
 import { useState } from 'react';
 import type { Product } from '@/lib/types';
 import { cn } from '@/lib/utils';
+import { useT } from '@/components/layout/i18n-ui';
 import { ReviewsSection } from './reviews-section';
 
 export function ProductTabs({ product }: { product: Product }) {
   const [tab, setTab] = useState<'description' | 'specs' | 'reviews'>('description');
   const specs = product.specifications || {};
+  const { t } = useT();
 
   const tabs = [
-    { id: 'description' as const, label: 'Description' },
-    { id: 'specs' as const, label: 'Specifications' },
-    { id: 'reviews' as const, label: `Reviews (${product.reviewCount})` },
+    { id: 'description' as const, label: t('product.description') },
+    { id: 'specs' as const, label: t('product.specifications') },
+    { id: 'reviews' as const, label: `${t('product.reviews')} (${product.reviewCount})` },
   ];
 
   return (
@@ -45,7 +47,7 @@ export function ProductTabs({ product }: { product: Product }) {
         {tab === 'specs' && (
           <div className="max-w-2xl overflow-hidden rounded-lg border border-[#E0E0E0] dark:border-[#2A2A2A]">
             {Object.keys(specs).length === 0 ? (
-              <p className="p-5 text-sm text-[#999999]">No specifications listed.</p>
+              <p className="p-5 text-sm text-[#999999]">{t('product.noSpecs')}</p>
             ) : (
               <table className="w-full text-sm">
                 <tbody>

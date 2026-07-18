@@ -7,11 +7,13 @@ import { Suspense, useCallback, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { api } from '@/lib/api';
 import { cn, formatDate, formatXAF } from '@/lib/utils';
+import { useT } from '@/components/layout/i18n-ui';
 
 const STEPS = ['pending', 'processing', 'shipped', 'delivered'];
 
 function TrackingContent() {
   const searchParams = useSearchParams();
+  const { t, tStatus } = useT();
   const [orderNumber, setOrderNumber] = useState(searchParams.get('order') || '');
   const [email, setEmail] = useState(searchParams.get('email') || '');
   const [result, setResult] = useState<any>(null);
@@ -47,9 +49,9 @@ function TrackingContent() {
     <div className="container-klass max-w-3xl py-14">
       <div className="text-center">
         <PackageSearch className="mx-auto h-12 w-12 text-brand dark:text-brand-light" />
-        <h1 className="mt-4 text-3xl font-extrabold">Track Your Order</h1>
+        <h1 className="mt-4 text-3xl font-extrabold">{t('order.trackTitle')}</h1>
         <p className="mt-2 text-sm text-[#555555] dark:text-[#999999]">
-          Enter your order number (e.g. KC-XXXXXXX) and the email used at checkout.
+          {t('order.trackHint')}
         </p>
       </div>
 
@@ -64,18 +66,18 @@ function TrackingContent() {
           required
           value={orderNumber}
           onChange={(e) => setOrderNumber(e.target.value)}
-          placeholder="Order number"
+          placeholder={t('order.numberPlaceholder')}
           className="input-klass"
         />
         <input
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          placeholder="Email address"
+          placeholder={t('common.email')}
           className="input-klass"
         />
         <button type="submit" disabled={loading} className="btn-primary">
-          {loading ? 'Searching…' : 'Track'}
+          {loading ? t('order.searching') : t('order.track')}
         </button>
       </form>
 
@@ -84,7 +86,9 @@ function TrackingContent() {
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
               <p className="font-mono text-lg font-bold">{result.orderNumber}</p>
-              <p className="text-xs text-[#999999]">Placed {formatDate(result.createdAt)}</p>
+              <p className="text-xs text-[#999999]">
+                {t('order.placed')} {formatDate(result.createdAt)}
+              </p>
             </div>
             <p className="text-lg font-extrabold text-brand dark:text-brand-light">
               {formatXAF(result.total)}
@@ -94,7 +98,7 @@ function TrackingContent() {
           {/* Progress steps */}
           {result.status === 'cancelled' ? (
             <p className="mt-6 rounded bg-red-50 p-4 text-sm font-semibold text-red-600 dark:bg-red-900/20 dark:text-red-400">
-              This order was cancelled. Contact support if this is unexpected.
+              {t('order.cancelled')}
             </p>
           ) : (
             <div className="mt-8 flex items-center">
@@ -112,13 +116,13 @@ function TrackingContent() {
                     )}
                     <span
                       className={cn(
-                        'mt-1.5 text-[11px] font-semibold capitalize',
+                        'mt-1.5 text-[11px] font-semibold',
                         i <= currentStep
                           ? 'text-brand dark:text-brand-light'
                           : 'text-[#999999]',
                       )}
                     >
-                      {step}
+                      {tStatus(step)}
                     </span>
                   </div>
                   {i < STEPS.length - 1 && (
@@ -136,7 +140,8 @@ function TrackingContent() {
 
           {result.trackingNumber && (
             <p className="mt-6 rounded bg-[#F5F5F5] p-3 text-sm dark:bg-[#141414]">
-              📦 Tracking number: <span className="font-mono font-bold">{result.trackingNumber}</span>
+              📦 {t('order.trackingNumber')}:{' '}
+              <span className="font-mono font-bold">{result.trackingNumber}</span>
             </p>
           )}
 

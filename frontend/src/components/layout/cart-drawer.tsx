@@ -6,12 +6,14 @@ import Link from 'next/link';
 import { formatXAF } from '@/lib/utils';
 import { useCartStore } from '@/stores/cart-store';
 import { useUiStore } from '@/stores/ui-store';
+import { useT } from './i18n-ui';
 
 const FREE_SHIPPING_THRESHOLD = 50000;
 
 export function CartDrawer() {
   const { cartOpen, setCartOpen } = useUiStore();
   const { items, updateQuantity, remove } = useCartStore();
+  const { t } = useT();
   const subtotal = items.reduce((sum, i) => sum + i.unitPrice * i.quantity, 0);
   const progress = Math.min((subtotal / FREE_SHIPPING_THRESHOLD) * 100, 100);
 
@@ -26,9 +28,9 @@ export function CartDrawer() {
       <aside className="absolute right-0 top-0 flex h-full w-full max-w-md animate-slide-in-right flex-col bg-white shadow-lg dark:bg-[#141414]">
         <div className="flex items-center justify-between border-b border-[#E0E0E0] px-5 py-4 dark:border-[#2A2A2A]">
           <h2 className="text-lg font-bold">
-            Your Cart{' '}
+            {t('cart.yourCart')}{' '}
             <span className="text-sm font-normal text-[#999999]">
-              ({items.reduce((s, i) => s + i.quantity, 0)} items)
+              ({items.reduce((s, i) => s + i.quantity, 0)} {t('cart.items')})
             </span>
           </h2>
           <button
@@ -44,8 +46,10 @@ export function CartDrawer() {
         <div className="border-b border-[#E0E0E0] px-5 py-3 dark:border-[#2A2A2A]">
           <p className="mb-1.5 text-xs text-[#555555] dark:text-[#999999]">
             {subtotal >= FREE_SHIPPING_THRESHOLD
-              ? '🎉 You unlocked free shipping!'
-              : `Add ${formatXAF(FREE_SHIPPING_THRESHOLD - subtotal)} more for free shipping`}
+              ? t('cart.freeShippingUnlocked')
+              : t('cart.freeShippingProgress', {
+                  amount: formatXAF(FREE_SHIPPING_THRESHOLD - subtotal),
+                })}
           </p>
           <div className="h-1.5 overflow-hidden rounded-full bg-[#F5F5F5] dark:bg-[#2A2A2A]">
             <div
@@ -58,10 +62,10 @@ export function CartDrawer() {
         {items.length === 0 ? (
           <div className="flex flex-1 flex-col items-center justify-center gap-3 p-8 text-center">
             <ShoppingCart className="h-12 w-12 text-[#E0E0E0] dark:text-[#2A2A2A]" />
-            <p className="font-semibold">Your cart is empty</p>
-            <p className="text-sm text-[#999999]">Find something you&apos;ll love in the shop.</p>
+            <p className="font-semibold">{t('cart.empty')}</p>
+            <p className="text-sm text-[#999999]">{t('cart.emptyDrawerHint')}</p>
             <Link href="/shop" onClick={() => setCartOpen(false)} className="btn-primary mt-2">
-              Browse Products
+              {t('cart.browseProducts')}
             </Link>
           </div>
         ) : (
@@ -132,15 +136,17 @@ export function CartDrawer() {
 
             <div className="border-t border-[#E0E0E0] p-5 dark:border-[#2A2A2A]">
               <div className="mb-4 flex items-center justify-between">
-                <span className="text-sm text-[#555555] dark:text-[#999999]">Subtotal</span>
+                <span className="text-sm text-[#555555] dark:text-[#999999]">
+                  {t('common.subtotal')}
+                </span>
                 <span className="text-lg font-bold">{formatXAF(subtotal)}</span>
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <Link href="/cart" onClick={() => setCartOpen(false)} className="btn-outline">
-                  View Cart
+                  {t('cart.viewCart')}
                 </Link>
                 <Link href="/checkout" onClick={() => setCartOpen(false)} className="btn-primary">
-                  Checkout
+                  {t('cart.checkout')}
                 </Link>
               </div>
             </div>

@@ -4,10 +4,12 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { Suspense, useState } from 'react';
 import toast from 'react-hot-toast';
 import { api } from '@/lib/api';
+import { useT } from '@/components/layout/i18n-ui';
 
 function ResetForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { t } = useT();
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
   const [loading, setLoading] = useState(false);
@@ -15,7 +17,7 @@ function ResetForm() {
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     if (password !== confirm) {
-      toast.error('Passwords do not match');
+      toast.error(t('auth.passwordsNoMatch'));
       return;
     }
     setLoading(true);
@@ -40,7 +42,7 @@ function ResetForm() {
   return (
     <div className="container-klass flex justify-center py-16">
       <div className="card-klass w-full max-w-md p-8">
-        <h1 className="text-2xl font-extrabold">Choose a new password</h1>
+        <h1 className="text-2xl font-extrabold">{t('auth.newPasswordTitle')}</h1>
         <form onSubmit={submit} className="mt-6 space-y-4">
           <input
             type="password"
@@ -48,7 +50,7 @@ function ResetForm() {
             minLength={8}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            placeholder="New password (min. 8 characters)"
+            placeholder={t('auth.newPassword')}
             className="input-klass"
           />
           <input
@@ -56,11 +58,11 @@ function ResetForm() {
             required
             value={confirm}
             onChange={(e) => setConfirm(e.target.value)}
-            placeholder="Confirm new password"
+            placeholder={t('auth.confirmNew')}
             className="input-klass"
           />
           <button type="submit" disabled={loading} className="btn-primary w-full !py-3">
-            {loading ? 'Updating…' : 'Update Password'}
+            {loading ? t('auth.updating') : t('auth.updatePassword')}
           </button>
         </form>
       </div>

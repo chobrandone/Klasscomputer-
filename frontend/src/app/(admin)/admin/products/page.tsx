@@ -8,8 +8,10 @@ import toast from 'react-hot-toast';
 import { api } from '@/lib/api';
 import type { Brand, Category, ProductList } from '@/lib/types';
 import { cn, formatXAF } from '@/lib/utils';
+import { useT } from '@/components/layout/i18n-ui';
 
 export default function AdminProductsPage() {
+  const { t } = useT();
   const [list, setList] = useState<ProductList | null>(null);
   const [categories, setCategories] = useState<Category[]>([]);
   const [brands, setBrands] = useState<Brand[]>([]);
@@ -42,7 +44,7 @@ export default function AdminProductsPage() {
         method: 'PATCH',
         body: JSON.stringify({ stock: Number(value) }),
       });
-      toast.success('Stock updated');
+      toast.success(t('admin.stockUpdated'));
       setStockEdits((prev) => {
         const { [id]: _, ...rest } = prev;
         return rest;
@@ -81,9 +83,9 @@ export default function AdminProductsPage() {
   return (
     <div className="space-y-5">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <h1 className="text-2xl font-extrabold">Products</h1>
+        <h1 className="text-2xl font-extrabold">{t('admin.products')}</h1>
         <Link href="/admin/products/new" className="btn-primary">
-          <Plus className="h-4 w-4" /> New Product
+          <Plus className="h-4 w-4" /> {t('admin.newProduct')}
         </Link>
       </div>
 
@@ -94,18 +96,18 @@ export default function AdminProductsPage() {
           <input
             value={search}
             onChange={(e) => { setSearch(e.target.value); setPage(1); }}
-            placeholder="Search products…"
+            placeholder={t('admin.searchProducts')}
             className="input-klass !pl-9"
           />
         </div>
         <select value={category} onChange={(e) => { setCategory(e.target.value); setPage(1); }} className="input-klass !w-auto">
-          <option value="">All categories</option>
+          <option value="">{t('admin.allCategories')}</option>
           {allCategories.map((c) => (
             <option key={c.id} value={c.slug}>{c.name}</option>
           ))}
         </select>
         <select value={brand} onChange={(e) => { setBrand(e.target.value); setPage(1); }} className="input-klass !w-auto">
-          <option value="">All brands</option>
+          <option value="">{t('admin.allBrands')}</option>
           {brands.map((b) => (
             <option key={b.id} value={b.slug}>{b.name}</option>
           ))}
@@ -115,10 +117,10 @@ export default function AdminProductsPage() {
       {/* Bulk actions */}
       {selected.length > 0 && (
         <div className="card-klass flex flex-wrap items-center gap-3 border-brand/40 p-3">
-          <span className="text-sm font-semibold">{selected.length} selected</span>
-          <button onClick={() => bulk('feature')} className="btn-outline !py-1.5 text-xs">Feature</button>
-          <button onClick={() => bulk('sale')} className="btn-outline !py-1.5 text-xs">Put on Sale</button>
-          <button onClick={() => bulk('delete')} className="btn-primary !py-1.5 text-xs">Delete</button>
+          <span className="text-sm font-semibold">{selected.length} {t('admin.selected')}</span>
+          <button onClick={() => bulk('feature')} className="btn-outline !py-1.5 text-xs">{t('admin.feature')}</button>
+          <button onClick={() => bulk('sale')} className="btn-outline !py-1.5 text-xs">{t('admin.putOnSale')}</button>
+          <button onClick={() => bulk('delete')} className="btn-primary !py-1.5 text-xs">{t('common.delete')}</button>
         </div>
       )}
 
@@ -137,12 +139,12 @@ export default function AdminProductsPage() {
                   }
                 />
               </th>
-              <th className="p-3">Product</th>
-              <th className="p-3">Category</th>
-              <th className="p-3">Price</th>
-              <th className="p-3">Stock</th>
-              <th className="p-3">Flags</th>
-              <th className="p-3 text-right">Actions</th>
+              <th className="p-3">{t('admin.product')}</th>
+              <th className="p-3">{t('admin.category')}</th>
+              <th className="p-3">{t('common.price')}</th>
+              <th className="p-3">{t('admin.stock')}</th>
+              <th className="p-3">{t('admin.flags')}</th>
+              <th className="p-3 text-right">{t('common.actions')}</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-[#F5F5F5] dark:divide-[#2A2A2A]">

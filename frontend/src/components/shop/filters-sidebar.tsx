@@ -6,6 +6,7 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
 import type { Brand, Category } from '@/lib/types';
 import { cn } from '@/lib/utils';
+import { useT } from '@/components/layout/i18n-ui';
 
 export function FiltersSidebar({
   categories,
@@ -19,6 +20,7 @@ export function FiltersSidebar({
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const { t } = useT();
 
   const selectedBrands = (searchParams.get('brand') || '').split(',').filter(Boolean);
   const [minPrice, setMinPrice] = useState(searchParams.get('minPrice') || '');
@@ -61,7 +63,9 @@ export function FiltersSidebar({
     <aside className="space-y-7">
       {/* Category tree */}
       <div>
-        <h3 className="mb-3 text-sm font-bold uppercase tracking-wider">Categories</h3>
+        <h3 className="mb-3 text-sm font-bold uppercase tracking-wider">
+          {t('nav.categories')}
+        </h3>
         <ul className="space-y-1">
           <li>
             <Link
@@ -73,7 +77,7 @@ export function FiltersSidebar({
                   : 'text-[#555555] dark:text-[#999999]',
               )}
             >
-              All Products
+              {t('shop.allProducts')}
             </Link>
           </li>
           {categories.map((cat) => (
@@ -112,7 +116,7 @@ export function FiltersSidebar({
 
       {/* Brands */}
       <div>
-        <h3 className="mb-3 text-sm font-bold uppercase tracking-wider">Brands</h3>
+        <h3 className="mb-3 text-sm font-bold uppercase tracking-wider">{t('shop.brands')}</h3>
         <ul className="space-y-2">
           {brands.map((brand) => (
             <li key={brand.id}>
@@ -132,13 +136,13 @@ export function FiltersSidebar({
 
       {/* Price range */}
       <div>
-        <h3 className="mb-3 text-sm font-bold uppercase tracking-wider">Price (XAF)</h3>
+        <h3 className="mb-3 text-sm font-bold uppercase tracking-wider">{t('shop.priceXaf')}</h3>
         <form onSubmit={applyPrice} className="space-y-2">
           <div className="flex items-center gap-2">
             <input
               type="number"
               min={0}
-              placeholder="Min"
+              placeholder={t('shop.min')}
               value={minPrice}
               onChange={(e) => setMinPrice(e.target.value)}
               className="input-klass !py-2 text-xs"
@@ -147,21 +151,21 @@ export function FiltersSidebar({
             <input
               type="number"
               min={0}
-              placeholder="Max"
+              placeholder={t('shop.max')}
               value={maxPrice}
               onChange={(e) => setMaxPrice(e.target.value)}
               className="input-klass !py-2 text-xs"
             />
           </div>
           <button type="submit" className="btn-outline w-full !py-2 text-xs">
-            Apply
+            {t('common.apply')}
           </button>
         </form>
       </div>
 
       {/* Rating */}
       <div>
-        <h3 className="mb-3 text-sm font-bold uppercase tracking-wider">Rating</h3>
+        <h3 className="mb-3 text-sm font-bold uppercase tracking-wider">{t('shop.rating')}</h3>
         <ul className="space-y-1.5">
           {[4, 3, 2, 1].map((stars) => (
             <li key={stars}>
@@ -185,7 +189,9 @@ export function FiltersSidebar({
                     )}
                   />
                 ))}
-                <span className="text-xs text-[#555555] dark:text-[#999999]">&amp; up</span>
+                <span className="text-xs text-[#555555] dark:text-[#999999]">
+                  {t('reviews.andUp')}
+                </span>
               </button>
             </li>
           ))}
@@ -201,7 +207,7 @@ export function FiltersSidebar({
             onChange={() => setParams({ inStock: inStock ? null : 'true' })}
             className="h-4 w-4 accent-brand"
           />
-          In stock only
+          {t('shop.inStockOnly')}
         </label>
       </div>
     </aside>

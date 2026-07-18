@@ -5,12 +5,14 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { Suspense, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useAuthStore } from '@/stores/auth-store';
+import { useT } from '@/components/layout/i18n-ui';
 
 function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const login = useAuthStore((s) => s.login);
   const loading = useAuthStore((s) => s.loading);
+  const { t } = useT();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -29,9 +31,9 @@ function LoginForm() {
   return (
     <div className="container-klass flex justify-center py-16">
       <div className="card-klass w-full max-w-md p-8">
-        <h1 className="text-2xl font-extrabold">Welcome back</h1>
+        <h1 className="text-2xl font-extrabold">{t('auth.welcomeBack')}</h1>
         <p className="mt-1 text-sm text-[#555555] dark:text-[#999999]">
-          Sign in to your Klass Computer account
+          {t('auth.signInSub')}
         </p>
         <form onSubmit={submit} className="mt-6 space-y-4">
           <input
@@ -39,7 +41,7 @@ function LoginForm() {
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder="Email address"
+            placeholder={t('common.email')}
             className="input-klass"
           />
           <input
@@ -47,7 +49,7 @@ function LoginForm() {
             required
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            placeholder="Password"
+            placeholder={t('common.password')}
             className="input-klass"
           />
           <div className="text-right">
@@ -55,17 +57,17 @@ function LoginForm() {
               href="/forgot-password"
               className="text-xs font-semibold text-brand hover:underline dark:text-brand-light"
             >
-              Forgot password?
+              {t('auth.forgotPassword')}
             </Link>
           </div>
           <button type="submit" disabled={loading} className="btn-primary w-full !py-3">
-            {loading ? 'Signing in…' : 'Sign In'}
+            {loading ? t('auth.signingIn') : t('auth.signIn')}
           </button>
         </form>
         <p className="mt-6 text-center text-sm text-[#555555] dark:text-[#999999]">
-          New here?{' '}
+          {t('auth.newHere')}{' '}
           <Link href="/register" className="font-semibold text-brand hover:underline dark:text-brand-light">
-            Create an account
+            {t('auth.createAccount')}
           </Link>
         </p>
       </div>

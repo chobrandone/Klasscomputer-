@@ -10,6 +10,7 @@ import { cn, discountPercent } from '@/lib/utils';
 import { useCartStore } from '@/stores/cart-store';
 import { useUiStore } from '@/stores/ui-store';
 import { useWishlistStore } from '@/stores/wishlist-store';
+import { useT } from '@/components/layout/i18n-ui';
 import { PriceTag } from './price-tag';
 import { RatingStars } from './rating-stars';
 
@@ -21,6 +22,7 @@ export function ProductCard({
   layout?: 'grid' | 'list';
 }) {
   const [hovered, setHovered] = useState(false);
+  const { t } = useT();
   const add = useCartStore((s) => s.add);
   const setCartOpen = useUiStore((s) => s.setCartOpen);
   const toggleWishlist = useWishlistStore((s) => s.toggle);
@@ -36,14 +38,16 @@ export function ProductCard({
     e.preventDefault();
     if (outOfStock) return;
     add(product, 1);
-    toast.success(`${product.name} added to cart`);
+    toast.success(`${product.name} ${t('product.addedToCart')}`);
     setCartOpen(true);
   }
 
   function onToggleWishlist(e: React.MouseEvent) {
     e.preventDefault();
     toggleWishlist(product);
-    toast.success(inWishlist ? 'Removed from wishlist' : 'Added to wishlist');
+    toast.success(
+      inWishlist ? t('product.removedFromWishlist') : t('product.addedToWishlist'),
+    );
   }
 
   if (layout === 'list') {
@@ -79,7 +83,11 @@ export function ProductCard({
               className="btn-primary !px-4 !py-2 text-xs"
             >
               <ShoppingCart className="h-4 w-4" />
-              {outOfStock ? 'Out of Stock' : hasVariants ? 'View Options' : 'Add to Cart'}
+              {outOfStock
+                ? t('product.outOfStock')
+                : hasVariants
+                  ? t('product.viewOptions')
+                  : t('product.addToCart')}
             </button>
           </div>
         </div>
@@ -114,12 +122,12 @@ export function ProductCard({
           )}
           {product.isNewArrival && (
             <span className="rounded bg-[#111111] px-2 py-0.5 text-xs font-bold text-white dark:bg-[#F0F0F0] dark:text-[#111111]">
-              NEW
+              {t('product.new')}
             </span>
           )}
           {outOfStock && (
-            <span className="rounded bg-[#555555] px-2 py-0.5 text-xs font-bold text-white">
-              SOLD OUT
+            <span className="rounded bg-[#555555] px-2 py-0.5 text-xs font-bold uppercase text-white">
+              {t('product.soldOut')}
             </span>
           )}
         </div>
@@ -144,7 +152,11 @@ export function ProductCard({
             className="flex flex-1 items-center justify-center gap-1.5 rounded bg-brand py-2 text-xs font-semibold text-white transition-colors hover:bg-brand-dark disabled:bg-[#555555]"
           >
             <ShoppingCart className="h-3.5 w-3.5" />
-            {outOfStock ? 'Sold Out' : hasVariants ? 'Options' : 'Quick Add'}
+            {outOfStock
+              ? t('product.soldOut')
+              : hasVariants
+                ? t('product.options')
+                : t('product.quickAdd')}
           </button>
           <span className="flex items-center justify-center rounded bg-white p-2 text-[#111111] shadow-sm dark:bg-[#1A1A1A] dark:text-white">
             <Eye className="h-3.5 w-3.5" />

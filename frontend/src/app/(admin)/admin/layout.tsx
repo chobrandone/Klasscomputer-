@@ -18,24 +18,27 @@ import { useEffect } from 'react';
 import { Toaster } from 'react-hot-toast';
 import { cn } from '@/lib/utils';
 import { useAuthStore } from '@/stores/auth-store';
+import type { TranslationKey } from '@/lib/i18n';
+import { LanguageToggle, useT } from '@/components/layout/i18n-ui';
 import { ThemeToggle } from '@/components/layout/theme-toggle';
 
-const links = [
-  { href: '/admin', label: 'Dashboard', icon: LayoutDashboard },
-  { href: '/admin/products', label: 'Products', icon: Package },
-  { href: '/admin/orders', label: 'Orders', icon: ShoppingCart },
-  { href: '/admin/customers', label: 'Customers', icon: Users },
-  { href: '/admin/categories', label: 'Categories', icon: Tag },
-  { href: '/admin/brands', label: 'Brands', icon: Store },
-  { href: '/admin/banners', label: 'Banners', icon: ImageIcon },
-  { href: '/admin/coupons', label: 'Coupons', icon: TicketPercent },
-  { href: '/admin/blog', label: 'Blog', icon: FileText },
+const links: { href: string; label: TranslationKey; icon: any }[] = [
+  { href: '/admin', label: 'admin.dashboard', icon: LayoutDashboard },
+  { href: '/admin/products', label: 'admin.products', icon: Package },
+  { href: '/admin/orders', label: 'admin.orders', icon: ShoppingCart },
+  { href: '/admin/customers', label: 'admin.customers', icon: Users },
+  { href: '/admin/categories', label: 'admin.categories', icon: Tag },
+  { href: '/admin/brands', label: 'admin.brands', icon: Store },
+  { href: '/admin/banners', label: 'admin.banners', icon: ImageIcon },
+  { href: '/admin/coupons', label: 'admin.coupons', icon: TicketPercent },
+  { href: '/admin/blog', label: 'admin.blog', icon: FileText },
 ];
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
   const { user, initialized, logout } = useAuthStore();
+  const { t } = useT();
 
   const isAdmin = user && ['admin', 'superadmin'].includes(user.role);
 
@@ -46,7 +49,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   if (!initialized || !isAdmin) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-white text-sm text-[#999999] dark:bg-[#0A0A0A]">
-        Checking permissions…
+        {t('admin.checkingPerms')}
       </div>
     );
   }
@@ -77,7 +80,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 )}
               >
                 <link.icon className="h-4.5 w-4.5 shrink-0" style={{ width: 18, height: 18 }} />
-                <span className="hidden lg:block">{link.label}</span>
+                <span className="hidden lg:block">{t(link.label)}</span>
               </Link>
             );
           })}
@@ -88,7 +91,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             className="flex items-center gap-3 rounded px-3 py-2.5 text-sm text-[#999999] transition-colors hover:bg-white/5 hover:text-white"
           >
             <Store style={{ width: 18, height: 18 }} />
-            <span className="hidden lg:block">View Store</span>
+            <span className="hidden lg:block">{t('admin.viewStore')}</span>
           </Link>
           <button
             onClick={async () => {
@@ -98,7 +101,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             className="flex w-full items-center gap-3 rounded px-3 py-2.5 text-sm text-[#999999] transition-colors hover:bg-white/5 hover:text-brand-light"
           >
             <LogOut style={{ width: 18, height: 18 }} />
-            <span className="hidden lg:block">Sign Out</span>
+            <span className="hidden lg:block">{t('auth.signOut')}</span>
           </button>
         </div>
       </aside>
@@ -107,12 +110,16 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       <div className="ml-16 flex-1 lg:ml-60">
         <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-[#E0E0E0] bg-white px-6 dark:border-[#2A2A2A] dark:bg-[#141414]">
           <p className="text-sm text-[#555555] dark:text-[#999999]">
-            Signed in as <span className="font-bold text-black dark:text-white">{user.firstName}</span>{' '}
+            {t('admin.signedInAs')}{' '}
+            <span className="font-bold text-black dark:text-white">{user.firstName}</span>{' '}
             <span className="rounded bg-brand/10 px-1.5 py-0.5 text-xs font-semibold text-brand dark:text-brand-light">
               {user.role}
             </span>
           </p>
-          <ThemeToggle />
+          <div className="flex items-center gap-1">
+            <LanguageToggle />
+            <ThemeToggle />
+          </div>
         </header>
         <main className="p-6">{children}</main>
       </div>

@@ -9,8 +9,10 @@ import { api } from '@/lib/api';
 import type { ReviewSummary } from '@/lib/types';
 import { cn, formatDate } from '@/lib/utils';
 import { useAuthStore } from '@/stores/auth-store';
+import { useT } from '@/components/layout/i18n-ui';
 
 export function ReviewsSection({ productId }: { productId: string }) {
+  const { t } = useT();
   const [data, setData] = useState<ReviewSummary | null>(null);
   const [rating, setRating] = useState(5);
   const [title, setTitle] = useState('');
@@ -34,7 +36,7 @@ export function ReviewsSection({ productId }: { productId: string }) {
         method: 'POST',
         body: JSON.stringify({ productId, rating, title, comment }),
       });
-      toast.success('Thanks for your review!');
+      toast.success(t('reviews.thanks'));
       setTitle('');
       setComment('');
       load();
@@ -46,7 +48,7 @@ export function ReviewsSection({ productId }: { productId: string }) {
   }
 
   if (!data) {
-    return <p className="text-sm text-[#999999]">Loading reviews…</p>;
+    return <p className="text-sm text-[#999999]">{t('common.loading')}</p>;
   }
 
   const maxCount = Math.max(...data.breakdown.map((b) => b.count), 1);
@@ -60,7 +62,9 @@ export function ReviewsSection({ productId }: { productId: string }) {
           <div className="mt-2 flex justify-center">
             <RatingStars rating={data.average} size="md" />
           </div>
-          <p className="mt-1 text-sm text-[#999999]">{data.total} reviews</p>
+          <p className="mt-1 text-sm text-[#999999]">
+            {data.total} {t('reviews.count')}
+          </p>
         </div>
         <div className="mt-4 space-y-2">
           {data.breakdown.map((row) => (
@@ -79,13 +83,13 @@ export function ReviewsSection({ productId }: { productId: string }) {
 
         {/* Write a review */}
         <div className="card-klass mt-6 p-5">
-          <h3 className="font-bold">Write a Review</h3>
+          <h3 className="font-bold">{t('reviews.writeReview')}</h3>
           {!user ? (
             <p className="mt-2 text-sm text-[#555555] dark:text-[#999999]">
               <Link href="/login" className="font-semibold text-brand dark:text-brand-light">
-                Sign in
+                {t('reviews.signIn')}
               </Link>{' '}
-              to share your experience.
+              {t('reviews.signInToReview')}
             </p>
           ) : (
             <form onSubmit={submit} className="mt-3 space-y-3">
@@ -111,19 +115,19 @@ export function ReviewsSection({ productId }: { productId: string }) {
               <input
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                placeholder="Review title (optional)"
+                placeholder={t('reviews.titlePlaceholder')}
                 className="input-klass"
               />
               <textarea
                 required
                 value={comment}
                 onChange={(e) => setComment(e.target.value)}
-                placeholder="What did you like or dislike?"
+                placeholder={t('reviews.commentPlaceholder')}
                 rows={3}
                 className="input-klass resize-none"
               />
               <button type="submit" disabled={submitting} className="btn-primary w-full">
-                {submitting ? 'Submitting…' : 'Submit Review'}
+                {submitting ? t('reviews.submitting') : t('reviews.submit')}
               </button>
             </form>
           )}
@@ -133,9 +137,7 @@ export function ReviewsSection({ productId }: { productId: string }) {
       {/* Review list */}
       <div>
         {data.reviews.length === 0 ? (
-          <p className="text-sm text-[#999999]">
-            No reviews yet — be the first to review this product!
-          </p>
+          <p className="text-sm text-[#999999]">{t('reviews.none')}</p>
         ) : (
           <div className="space-y-5">
             {data.reviews.map((review) => (

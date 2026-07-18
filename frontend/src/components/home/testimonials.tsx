@@ -4,6 +4,7 @@ import { Quote } from 'lucide-react';
 import { Autoplay } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { RatingStars } from '@/components/product/rating-stars';
+import { useT } from '@/components/layout/i18n-ui';
 import 'swiper/css';
 
 const testimonials = [
@@ -34,12 +35,13 @@ const testimonials = [
 ];
 
 export function Testimonials() {
+  const { t } = useT();
   return (
     <section className="mt-16 bg-[#F5F5F5] py-14 dark:bg-[#141414]">
       <div className="container-klass">
-        <h2 className="section-title text-center">What Our Customers Say</h2>
+        <h2 className="section-title text-center">{t('home.testimonials')}</h2>
         <p className="mt-2 text-center text-sm text-[#555555] dark:text-[#999999]">
-          Thousands of happy customers across Cameroon
+          {t('home.testimonialsSub')}
         </p>
         <Swiper
           modules={[Autoplay]}
@@ -50,23 +52,23 @@ export function Testimonials() {
           breakpoints={{ 640: { slidesPerView: 2 }, 1024: { slidesPerView: 3 } }}
           className="mt-8"
         >
-          {testimonials.map((t) => (
-            <SwiperSlide key={t.name}>
+          {testimonials.map((item) => (
+            <SwiperSlide key={item.name}>
               <div className="card-klass h-full p-6">
                 <Quote className="h-6 w-6 text-brand dark:text-brand-light" />
                 <p className="mt-3 min-h-[96px] text-sm leading-relaxed text-[#555555] dark:text-[#999999]">
-                  “{t.text}”
+                  “{item.text}”
                 </p>
                 <div className="mt-4 flex items-center gap-3 border-t border-[#F5F5F5] pt-4 dark:border-[#2A2A2A]">
                   <div className="flex h-10 w-10 items-center justify-center rounded-full bg-brand text-sm font-bold text-white">
-                    {t.name.charAt(0)}
+                    {item.name.charAt(0)}
                   </div>
                   <div>
-                    <p className="text-sm font-bold">{t.name}</p>
-                    <p className="text-xs text-[#999999]">{t.role}</p>
+                    <p className="text-sm font-bold">{item.name}</p>
+                    <p className="text-xs text-[#999999]">{item.role}</p>
                   </div>
                   <div className="ml-auto">
-                    <RatingStars rating={t.rating} />
+                    <RatingStars rating={item.rating} />
                   </div>
                 </div>
               </div>

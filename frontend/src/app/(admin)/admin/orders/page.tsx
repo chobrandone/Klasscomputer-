@@ -6,10 +6,12 @@ import { useCallback, useEffect, useState } from 'react';
 import { api } from '@/lib/api';
 import type { Order } from '@/lib/types';
 import { cn, formatDate, formatXAF, ORDER_STATUS_COLORS } from '@/lib/utils';
+import { useT } from '@/components/layout/i18n-ui';
 
 const STATUSES = ['', 'pending', 'processing', 'shipped', 'delivered', 'cancelled'];
 
 export default function AdminOrdersPage() {
+  const { t, tStatus } = useT();
   const [data, setData] = useState<{ items: Order[]; total: number; pages: number } | null>(null);
   const [status, setStatus] = useState('');
   const [search, setSearch] = useState('');
@@ -30,7 +32,7 @@ export default function AdminOrdersPage() {
 
   return (
     <div className="space-y-5">
-      <h1 className="text-2xl font-extrabold">Orders</h1>
+      <h1 className="text-2xl font-extrabold">{t('admin.orders')}</h1>
 
       <div className="card-klass flex flex-wrap items-center gap-3 p-4">
         <div className="relative min-w-52 flex-1">
@@ -38,13 +40,13 @@ export default function AdminOrdersPage() {
           <input
             value={search}
             onChange={(e) => { setSearch(e.target.value); setPage(1); }}
-            placeholder="Order # or customer email…"
+            placeholder={t('admin.searchOrders')}
             className="input-klass !pl-9"
           />
         </div>
-        <select value={status} onChange={(e) => { setStatus(e.target.value); setPage(1); }} className="input-klass !w-auto capitalize">
+        <select value={status} onChange={(e) => { setStatus(e.target.value); setPage(1); }} className="input-klass !w-auto">
           {STATUSES.map((s) => (
-            <option key={s} value={s}>{s || 'All statuses'}</option>
+            <option key={s} value={s}>{s ? tStatus(s) : t('admin.allStatuses')}</option>
           ))}
         </select>
         <input type="date" value={from} onChange={(e) => setFrom(e.target.value)} className="input-klass !w-auto" />
@@ -56,13 +58,13 @@ export default function AdminOrdersPage() {
         <table className="w-full min-w-[760px] text-sm">
           <thead>
             <tr className="border-b border-[#E0E0E0] text-left text-xs uppercase tracking-wide text-[#999999] dark:border-[#2A2A2A]">
-              <th className="p-3">Order</th>
-              <th className="p-3">Customer</th>
-              <th className="p-3">Date</th>
-              <th className="p-3">Items</th>
-              <th className="p-3">Payment</th>
-              <th className="p-3">Status</th>
-              <th className="p-3 text-right">Total</th>
+              <th className="p-3">{t('admin.order')}</th>
+              <th className="p-3">{t('admin.customer')}</th>
+              <th className="p-3">{t('common.date')}</th>
+              <th className="p-3">{t('admin.items')}</th>
+              <th className="p-3">{t('admin.payment')}</th>
+              <th className="p-3">{t('common.status')}</th>
+              <th className="p-3 text-right">{t('common.total')}</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-[#F5F5F5] dark:divide-[#2A2A2A]">
@@ -75,7 +77,7 @@ export default function AdminOrdersPage() {
                 </td>
                 <td className="p-3">
                   <p className="font-semibold">
-                    {order.user ? `${order.user.firstName} ${order.user.lastName}` : 'Guest'}
+                    {order.user ? `${order.user.firstName} ${order.user.lastName}` : t('admin.guest')}
                   </p>
                   <p className="text-xs text-[#999999]">{order.email}</p>
                 </td>
@@ -95,8 +97,8 @@ export default function AdminOrdersPage() {
                   </span>
                 </td>
                 <td className="p-3">
-                  <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold capitalize ${ORDER_STATUS_COLORS[order.status]}`}>
-                    {order.status}
+                  <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${ORDER_STATUS_COLORS[order.status]}`}>
+                    {tStatus(order.status)}
                   </span>
                 </td>
                 <td className="p-3 text-right font-bold">{formatXAF(order.total)}</td>
@@ -105,7 +107,7 @@ export default function AdminOrdersPage() {
           </tbody>
         </table>
         {data && data.items.length === 0 && (
-          <p className="p-8 text-center text-sm text-[#999999]">No orders match your filters.</p>
+          <p className="p-8 text-center text-sm text-[#999999]">{t('shop.noProducts')}</p>
         )}
       </div>
 

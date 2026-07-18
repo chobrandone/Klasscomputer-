@@ -5,11 +5,13 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { useAuthStore } from '@/stores/auth-store';
+import { useT } from '@/components/layout/i18n-ui';
 
 export default function RegisterPage() {
   const router = useRouter();
   const register = useAuthStore((s) => s.register);
   const loading = useAuthStore((s) => s.loading);
+  const { t } = useT();
   const [form, setForm] = useState({
     firstName: '',
     lastName: '',
@@ -27,7 +29,7 @@ export default function RegisterPage() {
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     if (form.password !== form.confirm) {
-      toast.error('Passwords do not match');
+      toast.error(t('auth.passwordsNoMatch'));
       return;
     }
     try {
@@ -48,27 +50,27 @@ export default function RegisterPage() {
   return (
     <div className="container-klass flex justify-center py-16">
       <div className="card-klass w-full max-w-md p-8">
-        <h1 className="text-2xl font-extrabold">Create your account</h1>
+        <h1 className="text-2xl font-extrabold">{t('auth.createTitle')}</h1>
         <p className="mt-1 text-sm text-[#555555] dark:text-[#999999]">
-          Track orders, save wishlists and check out faster.
+          {t('auth.createSub')}
         </p>
         <form onSubmit={submit} className="mt-6 space-y-4">
           <div className="grid grid-cols-2 gap-3">
-            <input required value={form.firstName} onChange={set('firstName')} placeholder="First name" className="input-klass" />
-            <input required value={form.lastName} onChange={set('lastName')} placeholder="Last name" className="input-klass" />
+            <input required value={form.firstName} onChange={set('firstName')} placeholder={t('auth.firstName')} className="input-klass" />
+            <input required value={form.lastName} onChange={set('lastName')} placeholder={t('auth.lastName')} className="input-klass" />
           </div>
-          <input type="email" required value={form.email} onChange={set('email')} placeholder="Email address" className="input-klass" />
-          <input value={form.phone} onChange={set('phone')} placeholder="Phone (optional)" className="input-klass" />
-          <input type="password" required minLength={8} value={form.password} onChange={set('password')} placeholder="Password (min. 8 characters)" className="input-klass" />
-          <input type="password" required value={form.confirm} onChange={set('confirm')} placeholder="Confirm password" className="input-klass" />
+          <input type="email" required value={form.email} onChange={set('email')} placeholder={t('common.email')} className="input-klass" />
+          <input value={form.phone} onChange={set('phone')} placeholder={t('auth.phoneOptional')} className="input-klass" />
+          <input type="password" required minLength={8} value={form.password} onChange={set('password')} placeholder={t('auth.passwordMin')} className="input-klass" />
+          <input type="password" required value={form.confirm} onChange={set('confirm')} placeholder={t('auth.confirmPassword')} className="input-klass" />
           <button type="submit" disabled={loading} className="btn-primary w-full !py-3">
-            {loading ? 'Creating account…' : 'Create Account'}
+            {loading ? t('auth.creating') : t('auth.createAccount')}
           </button>
         </form>
         <p className="mt-6 text-center text-sm text-[#555555] dark:text-[#999999]">
-          Already have an account?{' '}
+          {t('auth.haveAccount')}{' '}
           <Link href="/login" className="font-semibold text-brand hover:underline dark:text-brand-light">
-            Sign in
+            {t('auth.signIn')}
           </Link>
         </p>
       </div>

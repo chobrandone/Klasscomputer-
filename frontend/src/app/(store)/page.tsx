@@ -28,23 +28,23 @@ export default async function HomePage() {
       <HeroSlider banners={heroBanners || []} />
       <CategoryGrid categories={categories || []} />
       <ProductRow
-        title="This Week's Highlights"
-        subtitle="Hand-picked deals our customers love"
+        titleKey="home.highlights"
+        subtitleKey="home.highlightsSub"
         products={featured || []}
         href="/shop?isFeatured=true"
       />
       <FeatureStrip />
       <ProductGridSection
-        title="Top Sellers"
-        subtitle="The most popular tech right now"
+        titleKey="home.topSellers"
+        subtitleKey="home.topSellersSub"
         products={(topSellers || []).slice(0, 5)}
         href="/shop?sort=popularity"
         columns={5}
       />
       <PromoBanner banner={(promoBanners || [])[0]} />
       <ProductGridSection
-        title="New Arrivals"
-        subtitle="Fresh from the warehouse"
+        titleKey="home.newArrivals"
+        subtitleKey="home.newArrivalsSub"
         products={(newArrivals || []).slice(0, 8)}
         href="/shop?sort=newest"
       />

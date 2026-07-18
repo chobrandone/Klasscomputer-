@@ -14,11 +14,13 @@ import {
 } from 'recharts';
 import { api } from '@/lib/api';
 import { cn, formatDate, formatXAF, ORDER_STATUS_COLORS } from '@/lib/utils';
+import { useT } from '@/components/layout/i18n-ui';
 
 export default function AdminDashboard() {
   const [data, setData] = useState<any>(null);
   const [chart, setChart] = useState<any[]>([]);
   const [range, setRange] = useState<'daily' | 'monthly'>('daily');
+  const { t, tStatus } = useT();
 
   useEffect(() => {
     api('/analytics/dashboard').then(setData).catch(() => undefined);
@@ -39,15 +41,15 @@ export default function AdminDashboard() {
   }
 
   const kpis = [
-    { icon: TrendingUp, label: 'Revenue (this month)', value: formatXAF(data.kpis.totalRevenue) },
-    { icon: ShoppingCart, label: 'Total Orders', value: data.kpis.totalOrders },
-    { icon: Users, label: 'New Customers (month)', value: data.kpis.newCustomers },
-    { icon: Package, label: 'Products in Stock', value: data.kpis.productsInStock },
+    { icon: TrendingUp, label: t('admin.revenue'), value: formatXAF(data.kpis.totalRevenue) },
+    { icon: ShoppingCart, label: t('admin.totalOrders'), value: data.kpis.totalOrders },
+    { icon: Users, label: t('admin.newCustomers'), value: data.kpis.newCustomers },
+    { icon: Package, label: t('admin.inStock'), value: data.kpis.productsInStock },
   ];
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-extrabold">Dashboard</h1>
+      <h1 className="text-2xl font-extrabold">{t('admin.dashboard')}</h1>
 
       {/* KPI cards */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -67,18 +69,18 @@ export default function AdminDashboard() {
       {/* Sales chart */}
       <div className="card-klass p-5">
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="font-bold">Sales</h2>
+          <h2 className="font-bold">{t('admin.sales')}</h2>
           <div className="flex overflow-hidden rounded border border-[#E0E0E0] text-xs dark:border-[#2A2A2A]">
             {(['daily', 'monthly'] as const).map((r) => (
               <button
                 key={r}
                 onClick={() => setRange(r)}
                 className={cn(
-                  'px-3 py-1.5 font-semibold capitalize',
+                  'px-3 py-1.5 font-semibold',
                   range === r ? 'bg-brand text-white' : 'text-[#555555] dark:text-[#999999]',
                 )}
               >
-                {r === 'daily' ? 'Last 30 days' : 'Last 12 months'}
+                {r === 'daily' ? t('admin.last30') : t('admin.last12')}
               </button>
             ))}
           </div>
@@ -105,9 +107,9 @@ export default function AdminDashboard() {
         {/* Recent orders */}
         <div className="card-klass overflow-hidden">
           <div className="flex items-center justify-between border-b border-[#F5F5F5] px-5 py-4 dark:border-[#2A2A2A]">
-            <h2 className="font-bold">Recent Orders</h2>
+            <h2 className="font-bold">{t('admin.recentOrders')}</h2>
             <Link href="/admin/orders" className="text-sm font-semibold text-brand dark:text-brand-light">
-              View all →
+              {t('common.viewAll')} →
             </Link>
           </div>
           <div className="divide-y divide-[#F5F5F5] text-sm dark:divide-[#2A2A2A]">
@@ -122,9 +124,9 @@ export default function AdminDashboard() {
                   {formatDate(order.createdAt)}
                 </span>
                 <span
-                  className={`rounded-full px-2 py-0.5 text-[11px] font-semibold capitalize ${ORDER_STATUS_COLORS[order.status]}`}
+                  className={`rounded-full px-2 py-0.5 text-[11px] font-semibold ${ORDER_STATUS_COLORS[order.status]}`}
                 >
-                  {order.status}
+                  {tStatus(order.status)}
                 </span>
                 <span className="font-bold">{formatXAF(order.total)}</span>
               </Link>
@@ -136,14 +138,14 @@ export default function AdminDashboard() {
           {/* Top products */}
           <div className="card-klass overflow-hidden">
             <h2 className="border-b border-[#F5F5F5] px-5 py-4 font-bold dark:border-[#2A2A2A]">
-              Top 5 Products
+              {t('admin.topProducts')}
             </h2>
             <div className="divide-y divide-[#F5F5F5] text-sm dark:divide-[#2A2A2A]">
               {data.topProducts.map((product: any, i: number) => (
                 <div key={product.id} className="flex items-center gap-3 px-5 py-3">
                   <span className="w-5 font-extrabold text-brand dark:text-brand-light">#{i + 1}</span>
                   <span className="flex-1 truncate">{product.name}</span>
-                  <span className="text-xs text-[#999999]">{product.soldCount} sold</span>
+                  <span className="text-xs text-[#999999]">{product.soldCount} {t('admin.sold')}</span>
                 </div>
               ))}
             </div>
@@ -152,11 +154,11 @@ export default function AdminDashboard() {
           {/* Low stock alerts */}
           <div className="card-klass overflow-hidden">
             <h2 className="flex items-center gap-2 border-b border-[#F5F5F5] px-5 py-4 font-bold dark:border-[#2A2A2A]">
-              <AlertTriangle className="h-4 w-4 text-amber-500" /> Low Stock Alerts
+              <AlertTriangle className="h-4 w-4 text-amber-500" /> {t('admin.lowStock')}
             </h2>
             <div className="divide-y divide-[#F5F5F5] text-sm dark:divide-[#2A2A2A]">
               {data.lowStock.length === 0 ? (
-                <p className="px-5 py-4 text-[#999999]">All products well stocked 🎉</p>
+                <p className="px-5 py-4 text-[#999999]">{t('admin.allStocked')}</p>
               ) : (
                 data.lowStock.map((product: any) => (
                   <div key={product.id} className="flex items-center justify-between px-5 py-3">
@@ -169,7 +171,7 @@ export default function AdminDashboard() {
                           : 'bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300',
                       )}
                     >
-                      {product.stock} left
+                      {product.stock} {t('admin.left')}
                     </span>
                   </div>
                 ))

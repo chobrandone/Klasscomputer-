@@ -109,10 +109,7 @@ export default async function ProductPage({
 
       <ProductTabs product={product} />
 
-      <ProductRow
-        title="You Might Also Like"
-        products={related || []}
-      />
+      <ProductRow titleKey="product.relatedTitle" products={related || []} />
     </div>
   );
 }

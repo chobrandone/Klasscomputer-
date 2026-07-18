@@ -2,15 +2,17 @@
 
 import { X } from 'lucide-react';
 import { useUiStore } from '@/stores/ui-store';
+import { useT } from './i18n-ui';
 
 export function AnnouncementBar() {
   const { announcementDismissed, dismissAnnouncement } = useUiStore();
+  const { t } = useT();
   if (announcementDismissed) return null;
 
   return (
     <div className="sticky top-0 z-50 bg-brand text-white">
       <div className="container-klass flex items-center justify-center gap-3 py-2 text-center text-xs font-medium sm:text-sm">
-        <span>🚚 Free shipping on all orders above 50,000 XAF</span>
+        <span>{t('announce.freeShipping')}</span>
         <button
           onClick={dismissAnnouncement}
           aria-label="Dismiss announcement"

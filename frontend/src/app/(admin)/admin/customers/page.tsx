@@ -4,6 +4,7 @@ import { Search } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { api } from '@/lib/api';
 import { formatDate, formatXAF } from '@/lib/utils';
+import { useT } from '@/components/layout/i18n-ui';
 
 interface CustomerRow {
   id: string;
@@ -20,6 +21,7 @@ interface CustomerRow {
 export default function AdminCustomersPage() {
   const [customers, setCustomers] = useState<CustomerRow[]>([]);
   const [search, setSearch] = useState('');
+  const { t } = useT();
 
   useEffect(() => {
     const params = search ? `?search=${encodeURIComponent(search)}` : '';
@@ -28,7 +30,7 @@ export default function AdminCustomersPage() {
 
   return (
     <div className="space-y-5">
-      <h1 className="text-2xl font-extrabold">Customers</h1>
+      <h1 className="text-2xl font-extrabold">{t('admin.customers')}</h1>
 
       <div className="card-klass p-4">
         <div className="relative max-w-md">
@@ -36,7 +38,7 @@ export default function AdminCustomersPage() {
           <input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search by name or email…"
+            placeholder={t('admin.searchCustomers')}
             className="input-klass !pl-9"
           />
         </div>
@@ -46,12 +48,12 @@ export default function AdminCustomersPage() {
         <table className="w-full min-w-[720px] text-sm">
           <thead>
             <tr className="border-b border-[#E0E0E0] text-left text-xs uppercase tracking-wide text-[#999999] dark:border-[#2A2A2A]">
-              <th className="p-3">Customer</th>
-              <th className="p-3">Phone</th>
-              <th className="p-3">Role</th>
-              <th className="p-3">Joined</th>
-              <th className="p-3 text-right">Orders</th>
-              <th className="p-3 text-right">Total Spend</th>
+              <th className="p-3">{t('admin.customer')}</th>
+              <th className="p-3">{t('common.phone')}</th>
+              <th className="p-3">{t('admin.role')}</th>
+              <th className="p-3">{t('admin.joined')}</th>
+              <th className="p-3 text-right">{t('admin.orders')}</th>
+              <th className="p-3 text-right">{t('account.totalSpend')}</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-[#F5F5F5] dark:divide-[#2A2A2A]">
@@ -86,7 +88,7 @@ export default function AdminCustomersPage() {
           </tbody>
         </table>
         {customers.length === 0 && (
-          <p className="p-8 text-center text-sm text-[#999999]">No customers found.</p>
+          <p className="p-8 text-center text-sm text-[#999999]">{t('shop.noProducts')}</p>
         )}
       </div>
     </div>

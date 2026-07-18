@@ -2,20 +2,23 @@
 
 import { LayoutGrid, List } from 'lucide-react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import type { TranslationKey } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
+import { useT } from '@/components/layout/i18n-ui';
 
-const SORT_OPTIONS = [
-  { value: 'popularity', label: 'Popularity' },
-  { value: 'newest', label: 'Newest' },
-  { value: 'price_asc', label: 'Price: Low to High' },
-  { value: 'price_desc', label: 'Price: High to Low' },
-  { value: 'rating', label: 'Rating' },
+const SORT_OPTIONS: { value: string; label: TranslationKey }[] = [
+  { value: 'popularity', label: 'shop.popularity' },
+  { value: 'newest', label: 'shop.newest' },
+  { value: 'price_asc', label: 'shop.priceAsc' },
+  { value: 'price_desc', label: 'shop.priceDesc' },
+  { value: 'rating', label: 'shop.ratingSort' },
 ];
 
 export function ShopToolbar({ total }: { total: number }) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const { t } = useT();
   const sort = searchParams.get('sort') || 'popularity';
   const view = searchParams.get('view') || 'grid';
 
@@ -29,7 +32,8 @@ export function ShopToolbar({ total }: { total: number }) {
   return (
     <div className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-[#E0E0E0] bg-[#F5F5F5] px-4 py-3 dark:border-[#2A2A2A] dark:bg-[#141414]">
       <p className="text-sm text-[#555555] dark:text-[#999999]">
-        <span className="font-bold text-black dark:text-white">{total}</span> products found
+        <span className="font-bold text-black dark:text-white">{total}</span>{' '}
+        {t('shop.productsFound')}
       </p>
       <div className="flex items-center gap-3">
         <select
@@ -40,7 +44,7 @@ export function ShopToolbar({ total }: { total: number }) {
         >
           {SORT_OPTIONS.map((opt) => (
             <option key={opt.value} value={opt.value}>
-              Sort: {opt.label}
+              {t('shop.sort')}: {t(opt.label)}
             </option>
           ))}
         </select>

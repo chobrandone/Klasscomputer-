@@ -5,9 +5,11 @@ import toast from 'react-hot-toast';
 import { api } from '@/lib/api';
 import type { Address } from '@/lib/types';
 import { useAuthStore } from '@/stores/auth-store';
+import { useT } from '@/components/layout/i18n-ui';
 
 export default function AccountSettingsPage() {
   const { user, setUser } = useAuthStore();
+  const { t } = useT();
   const [profile, setProfile] = useState({ firstName: '', lastName: '', phone: '' });
   const [addresses, setAddresses] = useState<Address[]>([]);
   const [newAddress, setNewAddress] = useState<Address>({
@@ -35,7 +37,7 @@ export default function AccountSettingsPage() {
         body: JSON.stringify(profile),
       });
       setUser(updated);
-      toast.success('Profile updated');
+      toast.success(t('account.profileUpdated'));
     } catch (error: any) {
       toast.error(error.message || 'Update failed');
     } finally {
@@ -52,7 +54,7 @@ export default function AccountSettingsPage() {
       });
       setAddresses((prev) => [...prev, saved]);
       setNewAddress({ fullName: '', phone: '', line1: '', city: '', country: 'Cameroon' });
-      toast.success('Address added');
+      toast.success(t('account.addressAdded'));
     } catch (error: any) {
       toast.error(error.message || 'Could not add address');
     }
@@ -62,48 +64,48 @@ export default function AccountSettingsPage() {
     if (!id) return;
     await api(`/users/me/addresses/${id}`, { method: 'DELETE' }).catch(() => undefined);
     setAddresses((prev) => prev.filter((a) => a.id !== id));
-    toast.success('Address removed');
+    toast.success(t('account.addressRemoved'));
   }
 
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-2xl font-extrabold">Settings</h1>
+        <h1 className="text-2xl font-extrabold">{t('account.settings')}</h1>
         <p className="mt-1 text-sm text-[#555555] dark:text-[#999999]">
-          Manage your profile and delivery addresses.
+          {t('account.settingsSub')}
         </p>
       </div>
 
       <form onSubmit={saveProfile} className="card-klass p-6">
-        <h2 className="mb-4 font-bold">Profile</h2>
+        <h2 className="mb-4 font-bold">{t('account.profile')}</h2>
         <div className="grid gap-4 sm:grid-cols-2">
           <input
             value={profile.firstName}
             onChange={(e) => setProfile((p) => ({ ...p, firstName: e.target.value }))}
-            placeholder="First name"
+            placeholder={t('auth.firstName')}
             className="input-klass"
           />
           <input
             value={profile.lastName}
             onChange={(e) => setProfile((p) => ({ ...p, lastName: e.target.value }))}
-            placeholder="Last name"
+            placeholder={t('auth.lastName')}
             className="input-klass"
           />
           <input value={user?.email || ''} disabled className="input-klass opacity-60 sm:col-span-2" />
           <input
             value={profile.phone}
             onChange={(e) => setProfile((p) => ({ ...p, phone: e.target.value }))}
-            placeholder="Phone"
+            placeholder={t('common.phone')}
             className="input-klass sm:col-span-2"
           />
         </div>
         <button type="submit" disabled={saving} className="btn-primary mt-4">
-          {saving ? 'Saving…' : 'Save Changes'}
+          {saving ? t('common.saving') : t('common.save')}
         </button>
       </form>
 
       <div className="card-klass p-6">
-        <h2 className="mb-4 font-bold">Delivery Addresses</h2>
+        <h2 className="mb-4 font-bold">{t('account.addresses')}</h2>
         {addresses.length > 0 && (
           <div className="mb-6 grid gap-3 sm:grid-cols-2">
             {addresses.map((address) => (
@@ -122,20 +124,20 @@ export default function AccountSettingsPage() {
                   onClick={() => removeAddress(address.id)}
                   className="mt-2 text-xs font-semibold text-brand hover:underline"
                 >
-                  Remove
+                  {t('common.delete')}
                 </button>
               </div>
             ))}
           </div>
         )}
         <form onSubmit={addAddress} className="grid gap-3 sm:grid-cols-2">
-          <input required value={newAddress.fullName} onChange={(e) => setNewAddress((a) => ({ ...a, fullName: e.target.value }))} placeholder="Full name" className="input-klass" />
-          <input value={newAddress.phone} onChange={(e) => setNewAddress((a) => ({ ...a, phone: e.target.value }))} placeholder="Phone" className="input-klass" />
-          <input required value={newAddress.line1} onChange={(e) => setNewAddress((a) => ({ ...a, line1: e.target.value }))} placeholder="Street address" className="input-klass sm:col-span-2" />
-          <input required value={newAddress.city} onChange={(e) => setNewAddress((a) => ({ ...a, city: e.target.value }))} placeholder="City" className="input-klass" />
-          <input value={newAddress.region || ''} onChange={(e) => setNewAddress((a) => ({ ...a, region: e.target.value }))} placeholder="Region" className="input-klass" />
+          <input required value={newAddress.fullName} onChange={(e) => setNewAddress((a) => ({ ...a, fullName: e.target.value }))} placeholder={t('checkout.fullName')} className="input-klass" />
+          <input value={newAddress.phone} onChange={(e) => setNewAddress((a) => ({ ...a, phone: e.target.value }))} placeholder={t('common.phone')} className="input-klass" />
+          <input required value={newAddress.line1} onChange={(e) => setNewAddress((a) => ({ ...a, line1: e.target.value }))} placeholder={t('checkout.street')} className="input-klass sm:col-span-2" />
+          <input required value={newAddress.city} onChange={(e) => setNewAddress((a) => ({ ...a, city: e.target.value }))} placeholder={t('checkout.city')} className="input-klass" />
+          <input value={newAddress.region || ''} onChange={(e) => setNewAddress((a) => ({ ...a, region: e.target.value }))} placeholder={t('checkout.region')} className="input-klass" />
           <button type="submit" className="btn-outline sm:col-span-2">
-            + Add Address
+            {t('account.addAddress')}
           </button>
         </form>
       </div>

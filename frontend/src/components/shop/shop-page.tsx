@@ -1,5 +1,6 @@
 import { SlidersHorizontal } from 'lucide-react';
 import { ProductCard } from '@/components/product/product-card';
+import { T } from '@/components/layout/i18n-ui';
 import { serverApi } from '@/lib/api';
 import type { Brand, Category, ProductList } from '@/lib/types';
 import { FiltersSidebar } from './filters-sidebar';
@@ -60,7 +61,7 @@ export async function ShopPageContent({
         {/* Sidebar (collapsible on mobile) */}
         <details className="group lg:hidden">
           <summary className="btn-outline mb-4 flex cursor-pointer list-none items-center gap-2">
-            <SlidersHorizontal className="h-4 w-4" /> Filters
+            <SlidersHorizontal className="h-4 w-4" /> <T k="shop.filters" />
           </summary>
           <div className="card-klass mb-6 p-5">
             <FiltersSidebar
@@ -82,9 +83,11 @@ export async function ShopPageContent({
           <ShopToolbar total={list.total} />
           {list.items.length === 0 ? (
             <div className="card-klass flex flex-col items-center gap-2 py-20 text-center">
-              <p className="text-lg font-bold">No products found</p>
+              <p className="text-lg font-bold">
+                <T k="shop.noProducts" />
+              </p>
               <p className="text-sm text-[#999999]">
-                Try adjusting your filters or search terms.
+                <T k="shop.noProductsHint" />
               </p>
             </div>
           ) : view === 'list' ? (

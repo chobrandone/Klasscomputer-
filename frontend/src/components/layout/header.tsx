@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import {
   ChevronDown,
@@ -18,13 +18,15 @@ import { useAuthStore } from '@/stores/auth-store';
 import { useCartStore } from '@/stores/cart-store';
 import { useUiStore } from '@/stores/ui-store';
 import { useWishlistStore } from '@/stores/wishlist-store';
+import type { TranslationKey } from '@/lib/i18n';
+import { LanguageToggle, useT } from './i18n-ui';
 import { ThemeToggle } from './theme-toggle';
 
-const NAV_LINKS = [
-  { href: '/', label: 'Home' },
-  { href: '/shop', label: 'Shop' },
-  { href: '/blog', label: 'Blog' },
-  { href: '/contact', label: 'Contact' },
+const NAV_LINKS: { href: string; label: TranslationKey }[] = [
+  { href: '/', label: 'nav.home' },
+  { href: '/shop', label: 'nav.shop' },
+  { href: '/blog', label: 'nav.blog' },
+  { href: '/contact', label: 'nav.contact' },
 ];
 
 export function Header({ categories }: { categories: Category[] }) {
@@ -41,6 +43,7 @@ export function Header({ categories }: { categories: Category[] }) {
   const wishlistCount = useWishlistStore((s) => s.items.length);
   const setCartOpen = useUiStore((s) => s.setCartOpen);
   const user = useAuthStore((s) => s.user);
+  const { t } = useT();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -91,7 +94,7 @@ export function Header({ categories }: { categories: Category[] }) {
                   : 'text-[#111111] dark:text-[#F0F0F0]',
               )}
             >
-              {link.label}
+              {t(link.label)}
             </Link>
           ))}
 
@@ -102,7 +105,7 @@ export function Header({ categories }: { categories: Category[] }) {
             onMouseLeave={() => setCatOpen(false)}
           >
             <button className="flex items-center gap-1 rounded px-3 py-2 text-sm font-medium text-[#111111] transition-colors hover:text-brand dark:text-[#F0F0F0] dark:hover:text-brand-light">
-              Categories <ChevronDown className="h-4 w-4" />
+              {t('nav.categories')} <ChevronDown className="h-4 w-4" />
             </button>
             {catOpen && (
               <div className="absolute left-0 top-full w-64 rounded-lg border border-[#E0E0E0] bg-white p-2 shadow-lg dark:border-[#2A2A2A] dark:bg-[#1A1A1A]">
@@ -141,7 +144,7 @@ export function Header({ categories }: { categories: Category[] }) {
                   : 'text-[#111111] dark:text-[#F0F0F0]',
               )}
             >
-              {link.label}
+              {t(link.label)}
             </Link>
           ))}
         </nav>
@@ -155,6 +158,7 @@ export function Header({ categories }: { categories: Category[] }) {
           >
             <Search className="h-5 w-5" />
           </button>
+          <LanguageToggle />
           <ThemeToggle />
           <Link
             href="/wishlist"
@@ -205,11 +209,11 @@ export function Header({ categories }: { categories: Category[] }) {
               ref={searchRef}
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search laptops, SSDs, monitors…"
+              placeholder={t('nav.searchPlaceholder')}
               className="input-klass"
             />
             <button type="submit" className="btn-primary shrink-0">
-              Search
+              {t('nav.search')}
             </button>
           </form>
         </div>
@@ -224,11 +228,11 @@ export function Header({ categories }: { categories: Category[] }) {
               href={link.href}
               className="block rounded px-3 py-2.5 text-sm font-medium hover:bg-[#F5F5F5] dark:hover:bg-[#1A1A1A]"
             >
-              {link.label}
+              {t(link.label)}
             </Link>
           ))}
           <p className="mt-2 px-3 text-xs font-semibold uppercase tracking-wider text-[#999999]">
-            Categories
+            {t('nav.categories')}
           </p>
           {categories.map((cat) => (
             <Link
@@ -243,7 +247,7 @@ export function Header({ categories }: { categories: Category[] }) {
             href={user ? (user.role === 'customer' ? '/account' : '/admin') : '/login'}
             className="mt-2 block rounded bg-brand px-3 py-2.5 text-center text-sm font-semibold text-white"
           >
-            {user ? 'My Account' : 'Sign In'}
+            {user ? t('nav.myAccount') : t('nav.signIn')}
           </Link>
         </nav>
       )}

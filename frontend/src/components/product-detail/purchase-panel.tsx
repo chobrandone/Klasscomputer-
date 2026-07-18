@@ -9,9 +9,11 @@ import { cn, effectivePrice, formatXAF } from '@/lib/utils';
 import { useCartStore } from '@/stores/cart-store';
 import { useUiStore } from '@/stores/ui-store';
 import { useWishlistStore } from '@/stores/wishlist-store';
+import { useT } from '@/components/layout/i18n-ui';
 
 export function PurchasePanel({ product }: { product: Product }) {
   const router = useRouter();
+  const { t } = useT();
   const [quantity, setQuantity] = useState(1);
   const [selection, setSelection] = useState<Record<string, string>>(() => {
     const initial: Record<string, string> = {};
@@ -41,7 +43,7 @@ export function PurchasePanel({ product }: { product: Product }) {
   function addToCart() {
     if (outOfStock) return;
     add(product, quantity, Object.keys(selection).length ? selection : undefined);
-    toast.success(`${product.name} added to cart`);
+    toast.success(`${product.name} ${t('product.addedToCart')}`);
     setCartOpen(true);
   }
 
@@ -95,14 +97,14 @@ export function PurchasePanel({ product }: { product: Product }) {
 
       {/* Stock indicator */}
       {outOfStock ? (
-        <p className="text-sm font-semibold text-red-500">Out of stock</p>
+        <p className="text-sm font-semibold text-red-500">{t('product.outOfStock')}</p>
       ) : lowStock ? (
         <p className="text-sm font-semibold text-amber-600 dark:text-amber-400">
-          🔥 Only {product.stock} left in stock — order soon!
+          {t('product.onlyLeft', { n: product.stock })}
         </p>
       ) : (
         <p className="text-sm font-semibold text-green-600 dark:text-green-400">
-          ✓ In stock and ready to ship
+          {t('product.inStockReady')}
         </p>
       )}
 
@@ -126,12 +128,14 @@ export function PurchasePanel({ product }: { product: Product }) {
           </button>
         </div>
         <button onClick={addToCart} disabled={outOfStock} className="btn-primary flex-1 !py-3">
-          <ShoppingCart className="h-4 w-4" /> Add to Cart
+          <ShoppingCart className="h-4 w-4" /> {t('product.addToCart')}
         </button>
         <button
           onClick={() => {
             toggleWishlist(product);
-            toast.success(inWishlist ? 'Removed from wishlist' : 'Added to wishlist');
+            toast.success(
+              inWishlist ? t('product.removedFromWishlist') : t('product.addedToWishlist'),
+            );
           }}
           aria-label="Toggle wishlist"
           className={cn(
@@ -146,7 +150,7 @@ export function PurchasePanel({ product }: { product: Product }) {
       </div>
 
       <button onClick={buyNow} disabled={outOfStock} className="btn-outline w-full !py-3">
-        <Zap className="h-4 w-4" /> Buy It Now
+        <Zap className="h-4 w-4" /> {t('product.buyNow')}
       </button>
     </div>
   );

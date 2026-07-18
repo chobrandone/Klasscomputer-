@@ -1,37 +1,42 @@
+'use client';
+
 import { Facebook, Instagram, Mail, MapPin, Phone, Twitter, Youtube } from 'lucide-react';
 import Link from 'next/link';
+import type { TranslationKey } from '@/lib/i18n';
+import { useT } from './i18n-ui';
 
-const columns = [
+const columns: { title: TranslationKey; links: { label: TranslationKey; href: string }[] }[] = [
   {
-    title: 'Support',
+    title: 'footer.support',
     links: [
-      { label: 'Contact Us', href: '/contact' },
-      { label: 'FAQs', href: '/faqs' },
-      { label: 'Order Tracking', href: '/order-tracking' },
-      { label: 'Shipping & Returns', href: '/faqs' },
+      { label: 'footer.contactUs', href: '/contact' },
+      { label: 'footer.faqs', href: '/faqs' },
+      { label: 'footer.orderTracking', href: '/order-tracking' },
+      { label: 'footer.shippingReturns', href: '/faqs' },
     ],
   },
   {
-    title: 'Quick Links',
+    title: 'footer.quickLinks',
     links: [
-      { label: 'Shop All', href: '/shop' },
-      { label: 'Laptops', href: '/category/laptops' },
-      { label: 'Desktops', href: '/category/desktops' },
-      { label: 'Blog', href: '/blog' },
+      { label: 'footer.shopAll', href: '/shop' },
+      { label: 'footer.laptops', href: '/category/laptops' },
+      { label: 'footer.desktops', href: '/category/desktops' },
+      { label: 'nav.blog', href: '/blog' },
     ],
   },
   {
-    title: 'Legal',
+    title: 'footer.legal',
     links: [
-      { label: 'About Us', href: '/about' },
-      { label: 'Privacy Policy', href: '/about' },
-      { label: 'Terms of Service', href: '/about' },
-      { label: 'Warranty Policy', href: '/faqs' },
+      { label: 'footer.aboutUs', href: '/about' },
+      { label: 'footer.privacy', href: '/about' },
+      { label: 'footer.terms', href: '/about' },
+      { label: 'footer.warrantyPolicy', href: '/faqs' },
     ],
   },
 ];
 
 export function Footer() {
+  const { t } = useT();
   return (
     <footer className="border-t border-[#E0E0E0] bg-[#0A0A0A] text-[#F0F0F0] dark:border-[#2A2A2A]">
       <div className="container-klass grid gap-10 py-14 md:grid-cols-2 lg:grid-cols-5">
@@ -41,12 +46,11 @@ export function Footer() {
             <span className="text-brand-light">COMPUTER</span>
           </Link>
           <p className="mt-3 max-w-sm text-sm leading-relaxed text-[#999999]">
-            Your trusted computer &amp; electronics shop in Cameroon. Genuine products,
-            12-month warranty and fast nationwide delivery.
+            {t('footer.tagline')}
           </p>
           <div className="mt-5 space-y-2 text-sm text-[#999999]">
             <p className="flex items-center gap-2">
-              <MapPin className="h-4 w-4 text-brand-light" /> Akwa, Douala — Cameroon
+              <MapPin className="h-4 w-4 text-brand-light" /> Akwa, Douala — Cameroun
             </p>
             <p className="flex items-center gap-2">
               <Phone className="h-4 w-4 text-brand-light" /> +237 670 000 000
@@ -72,7 +76,7 @@ export function Footer() {
         {columns.map((col) => (
           <div key={col.title}>
             <h3 className="mb-4 text-sm font-bold uppercase tracking-wider text-white">
-              {col.title}
+              {t(col.title)}
             </h3>
             <ul className="space-y-2.5">
               {col.links.map((link) => (
@@ -81,7 +85,7 @@ export function Footer() {
                     href={link.href}
                     className="text-sm text-[#999999] transition-colors hover:text-brand-light"
                   >
-                    {link.label}
+                    {t(link.label)}
                   </Link>
                 </li>
               ))}
@@ -92,7 +96,7 @@ export function Footer() {
 
       <div className="border-t border-[#2A2A2A]">
         <div className="container-klass flex flex-col items-center justify-between gap-3 py-5 text-xs text-[#999999] sm:flex-row">
-          <p>© {new Date().getFullYear()} Klass Computer. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} Klass Computer. {t('footer.rights')}</p>
           <div className="flex items-center gap-2 font-semibold uppercase tracking-wide">
             <span className="rounded border border-[#2A2A2A] px-2 py-1">Visa</span>
             <span className="rounded border border-[#2A2A2A] px-2 py-1">Mastercard</span>

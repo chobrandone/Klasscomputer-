@@ -6,17 +6,20 @@ import { usePathname, useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import { useAuthStore } from '@/stores/auth-store';
+import type { TranslationKey } from '@/lib/i18n';
+import { useT } from '@/components/layout/i18n-ui';
 
-const links = [
-  { href: '/account', label: 'Dashboard', icon: LayoutDashboard },
-  { href: '/account/orders', label: 'My Orders', icon: Package },
-  { href: '/account/settings', label: 'Settings', icon: Settings },
+const links: { href: string; label: TranslationKey; icon: any }[] = [
+  { href: '/account', label: 'account.dashboard', icon: LayoutDashboard },
+  { href: '/account/orders', label: 'account.myOrders', icon: Package },
+  { href: '/account/settings', label: 'account.settings', icon: Settings },
 ];
 
 export default function AccountLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
   const { user, initialized, logout } = useAuthStore();
+  const { t } = useT();
 
   useEffect(() => {
     if (initialized && !user) router.replace('/login?next=' + pathname);
@@ -25,7 +28,7 @@ export default function AccountLayout({ children }: { children: React.ReactNode 
   if (!initialized || !user) {
     return (
       <div className="container-klass py-24 text-center text-sm text-[#999999]">
-        Loading your account…
+        {t('account.loadingAccount')}
       </div>
     );
   }
@@ -56,7 +59,7 @@ export default function AccountLayout({ children }: { children: React.ReactNode 
                   : 'text-[#555555] hover:bg-[#F5F5F5] dark:text-[#999999] dark:hover:bg-[#141414]',
               )}
             >
-              <link.icon className="h-4 w-4" /> {link.label}
+              <link.icon className="h-4 w-4" /> {t(link.label)}
             </Link>
           ))}
           <button
@@ -66,7 +69,7 @@ export default function AccountLayout({ children }: { children: React.ReactNode 
             }}
             className="flex w-full items-center gap-2.5 rounded px-3 py-2.5 text-sm font-medium text-[#555555] transition-colors hover:bg-[#F5F5F5] hover:text-brand dark:text-[#999999] dark:hover:bg-[#141414]"
           >
-            <LogOut className="h-4 w-4" /> Sign Out
+            <LogOut className="h-4 w-4" /> {t('auth.signOut')}
           </button>
         </nav>
       </aside>

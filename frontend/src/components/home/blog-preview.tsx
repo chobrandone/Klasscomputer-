@@ -1,25 +1,29 @@
+'use client';
+
 import Image from 'next/image';
 import Link from 'next/link';
 import type { BlogPost } from '@/lib/types';
 import { formatDate } from '@/lib/utils';
+import { useT } from '@/components/layout/i18n-ui';
 
 export function BlogPreview({ posts }: { posts: BlogPost[] }) {
+  const { t } = useT();
   if (!posts.length) return null;
 
   return (
     <section className="container-klass mt-14">
       <div className="mb-6 flex items-end justify-between">
         <div>
-          <h2 className="section-title">From the Blog</h2>
+          <h2 className="section-title">{t('home.blog')}</h2>
           <p className="mt-1 text-sm text-[#555555] dark:text-[#999999]">
-            Buying guides, tips and tech news
+            {t('home.blogSub')}
           </p>
         </div>
         <Link
           href="/blog"
           className="text-sm font-semibold text-brand hover:underline dark:text-brand-light"
         >
-          All articles →
+          {t('home.allArticles')} →
         </Link>
       </div>
       <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">

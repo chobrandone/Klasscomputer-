@@ -6,26 +6,28 @@ import { useEffect, useState } from 'react';
 import { api } from '@/lib/api';
 import type { Order } from '@/lib/types';
 import { formatDate, formatXAF, ORDER_STATUS_COLORS } from '@/lib/utils';
+import { useT } from '@/components/layout/i18n-ui';
 
 export default function MyOrdersPage() {
   const [orders, setOrders] = useState<Order[] | null>(null);
+  const { t, tStatus } = useT();
 
   useEffect(() => {
     api<Order[]>('/orders/my').then(setOrders).catch(() => setOrders([]));
   }, []);
 
   if (!orders) {
-    return <p className="text-sm text-[#999999]">Loading orders…</p>;
+    return <p className="text-sm text-[#999999]">{t('common.loading')}</p>;
   }
 
   return (
     <div>
-      <h1 className="text-2xl font-extrabold">My Orders</h1>
+      <h1 className="text-2xl font-extrabold">{t('account.myOrders')}</h1>
       {orders.length === 0 ? (
         <div className="card-klass mt-6 p-10 text-center">
-          <p className="font-bold">No orders yet</p>
+          <p className="font-bold">{t('account.noOrdersTitle')}</p>
           <Link href="/shop" className="btn-primary mt-4">
-            Start Shopping
+            {t('cart.startShopping')}
           </Link>
         </div>
       ) : (
@@ -39,9 +41,9 @@ export default function MyOrdersPage() {
                 </div>
                 <div className="flex items-center gap-3">
                   <span
-                    className={`rounded-full px-2.5 py-1 text-xs font-semibold capitalize ${ORDER_STATUS_COLORS[order.status]}`}
+                    className={`rounded-full px-2.5 py-1 text-xs font-semibold ${ORDER_STATUS_COLORS[order.status]}`}
                   >
-                    {order.status}
+                    {tStatus(order.status)}
                   </span>
                   <span className="font-extrabold text-brand dark:text-brand-light">
                     {formatXAF(order.total)}
@@ -66,7 +68,7 @@ export default function MyOrdersPage() {
                   href={`/order-tracking?order=${order.orderNumber}&email=${encodeURIComponent(order.email)}`}
                   className="font-semibold text-brand hover:underline dark:text-brand-light"
                 >
-                  Track order
+                  {t('order.trackOrder')}
                 </Link>
               </div>
             </div>

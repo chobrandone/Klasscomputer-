@@ -4,10 +4,12 @@ import { Send } from 'lucide-react';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { api } from '@/lib/api';
+import { useT } from '@/components/layout/i18n-ui';
 
 export function NewsletterForm() {
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
+  const { t } = useT();
 
   async function subscribe(e: React.FormEvent) {
     e.preventDefault();
@@ -33,10 +35,10 @@ export function NewsletterForm() {
         <div className="pointer-events-none absolute -left-20 -top-20 h-64 w-64 rounded-full bg-brand/30 blur-3xl" />
         <div className="pointer-events-none absolute -bottom-20 -right-20 h-64 w-64 rounded-full bg-brand/20 blur-3xl" />
         <h2 className="relative text-2xl font-extrabold text-white sm:text-3xl">
-          Stay in the Loop
+          {t('home.newsletterTitle')}
         </h2>
         <p className="relative mx-auto mt-2 max-w-md text-sm text-white/70">
-          Subscribe for exclusive deals, new arrivals and tech tips — straight to your inbox.
+          {t('home.newsletterSub')}
         </p>
         <form
           onSubmit={subscribe}
@@ -52,7 +54,9 @@ export function NewsletterForm() {
           />
           <button type="submit" disabled={loading} className="btn-primary shrink-0 !py-3">
             <Send className="h-4 w-4" />
-            <span className="hidden sm:inline">{loading ? 'Sending…' : 'Subscribe'}</span>
+            <span className="hidden sm:inline">
+              {loading ? t('home.sending') : t('home.subscribe')}
+            </span>
           </button>
         </form>
       </div>
